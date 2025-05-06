@@ -6,7 +6,8 @@ from sap_connections import SapConnection
 from config import WORKFLOW_STEPS, SPEX_CUSTOMER_NUMBERS
 
 logger = logging.getLogger(__name__)
-sap = SapConnection()
+# Create a SAP connection instance using the factory method
+sap = SapConnection.create()
 
 # Ensure SAP connection is active
 @app.before_request

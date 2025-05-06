@@ -100,3 +100,7 @@ SAP_CONFIG = {
     "user": os.environ.get("SAP_USER", ""),
     "passwd": os.environ.get("SAP_PASSWORD", "")
 }
+
+# SAP API Configuration for Windows SAP GUI integration
+SAP_API_URL = os.environ.get("SAP_API_URL", "http://localhost:5001/api/sap")
+SAP_CONNECTION_TYPE = os.environ.get("SAP_CONNECTION_TYPE", "mock")  # "mock" or "api"
