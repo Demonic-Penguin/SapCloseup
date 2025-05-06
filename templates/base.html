@@ -35,7 +35,6 @@
                     </li>
                     <li class="nav-item">
                         <form action="{{ url_for('reset_workflow') }}" method="post" class="d-inline">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <button type="submit" class="btn nav-link border-0 bg-transparent">
                                 <i class="fas fa-redo-alt me-1"></i> Reset
                             </button>
