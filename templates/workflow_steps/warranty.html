@@ -1,0 +1,101 @@
+<div class="step-container">
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Warranty Check:</strong> Verify the warranty status for this service order.
+    </div>
+    
+    <form method="POST" id="warrantyForm" class="needs-validation" novalidate>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Warranty Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">Has the warranty status been checked and verified?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="warranty_checked" id="warranty_checked_yes" value="yes" required>
+                        <label class="form-check-label" for="warranty_checked_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, warranty status verified
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="warranty_checked" id="warranty_checked_no" value="no">
+                        <label class="form-check-label" for="warranty_checked_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, warranty status not verified
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-4" id="warranty-status-group">
+                    <label class="form-label">Select the warranty status:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="warranty_status" id="warranty_in" value="in">
+                        <label class="form-check-label" for="warranty_in">
+                            <span class="badge bg-success me-2">In Warranty</span> The item is under warranty
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="warranty_status" id="warranty_out" value="out">
+                        <label class="form-check-label" for="warranty_out">
+                            <span class="badge bg-warning me-2">Out of Warranty</span> The item is not under warranty
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="warranty_status" id="warranty_extended" value="extended">
+                        <label class="form-check-label" for="warranty_extended">
+                            <span class="badge bg-info me-2">Extended Warranty</span> The item has extended warranty
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mt-3 d-none" id="warranty-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> The warranty status must be checked before proceeding.
+        </div>
+        
+        <div class="card border-light mt-4">
+            <div class="card-body">
+                <h5 class="card-title text-primary">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Warranty Check Procedure
+                </h5>
+                <ol>
+                    <li>Check the warranty field in SAP</li>
+                    <li>Verify if any special warranty conditions apply</li>
+                    <li>Ensure all warranty-related documentation is attached to the order</li>
+                    <li>If warranty is disputed, escalate to supervisor</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-shield-alt me-2"></i>
+                Confirm Warranty Check
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const warrantyNo = document.getElementById('warranty_checked_no');
+    const warrantyAlert = document.getElementById('warranty-alert');
+    
+    function checkWarranty() {
+        if (warrantyNo.checked) {
+            warrantyAlert.classList.remove('d-none');
+        } else {
+            warrantyAlert.classList.add('d-none');
+        }
+    }
+    
+    warrantyNo.addEventListener('change', checkWarranty);
+    document.getElementById('warranty_checked_yes').addEventListener('change', checkWarranty);
+});
+</script>

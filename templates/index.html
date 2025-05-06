@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-lg mt-4">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h1 class="display-5">
+                    <i class="fas fa-laptop-code me-3 animated-icon"></i>
+                    SAP Close-Up Automation
+                </h1>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <p class="lead">Welcome to the SAP Close-Up Automation Tool!</p>
+                    <p>This tool guides you through the complete SAP close-up process, ensuring all necessary steps are completed correctly.</p>
+                </div>
+                
+                <div class="features-section py-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                </div>
+                                <h4>Step-by-Step Guidance</h4>
+                                <p>Follow our guided workflow to ensure no step is missed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-tasks fa-3x text-primary mb-3"></i>
+                                </div>
+                                <h4>Automated Validation</h4>
+                                <p>Automatic checks to prevent errors</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+                                </div>
+                                <h4>Improved Efficiency</h4>
+                                <p>Complete the close-up process faster and more accurately</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('workflow', step_id='service_order') }}" class="btn btn-primary btn-lg px-5 py-3 shadow">
+                        <i class="fas fa-play-circle me-2"></i> Start Close-Up Process
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-center py-3">
+                <p class="text-muted mb-0">Rev O-3 - Optimized for Olathe Operations</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

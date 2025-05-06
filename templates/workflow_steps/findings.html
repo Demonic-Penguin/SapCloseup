@@ -1,0 +1,110 @@
+<div class="step-container">
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Findings Update:</strong> Update the modifications, software versions, and other findings information.
+    </div>
+    
+    <form method="POST" id="findingsForm" class="needs-validation" novalidate>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Modifications</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="mods_in" class="form-label">Incoming Modifications:</label>
+                            <textarea class="form-control" id="mods_in" name="mods_in" rows="4" placeholder="Enter incoming modifications here...">{{ service_order.mods_in or '' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="mods_out" class="form-label">Outgoing Modifications:</label>
+                            <textarea class="form-control" id="mods_out" name="mods_out" rows="4" placeholder="Enter outgoing modifications here..." required>{{ service_order.mods_out or '' }}</textarea>
+                            <div class="invalid-feedback">
+                                Please enter outgoing modifications.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="sf_mods_in" class="form-label">Incoming Safety Features:</label>
+                            <textarea class="form-control" id="sf_mods_in" name="sf_mods_in" rows="2" placeholder="Enter incoming safety features...">{{ service_order.sf_mods_in or '' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="sf_mods_out" class="form-label">Outgoing Safety Features:</label>
+                            <textarea class="form-control" id="sf_mods_out" name="sf_mods_out" rows="2" placeholder="Enter outgoing safety features...">{{ service_order.sf_mods_out or '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="sw_versions_in" class="form-label">Incoming Software Versions:</label>
+                            <textarea class="form-control" id="sw_versions_in" name="sw_versions_in" rows="2" placeholder="Enter incoming software versions...">{{ service_order.sw_versions_in or '' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="sw_versions_out" class="form-label">Outgoing Software Versions:</label>
+                            <textarea class="form-control" id="sw_versions_out" name="sw_versions_out" rows="2" placeholder="Enter outgoing software versions...">{{ service_order.sw_versions_out or '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Additional Comments</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="comments" class="form-label">WSUPD Comments:</label>
+                    <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Enter any additional comments for WSUPD..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-animation mb-4 d-none" id="update-animation">
+            <div class="findings-animation text-center">
+                <i class="fas fa-sync fa-spin fa-3x text-primary"></i>
+                <div class="progress mt-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                </div>
+                <p class="text-center mt-2">Updating findings in SAP...</p>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-2"></i>
+                Update Findings
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('findingsForm');
+    const animation = document.getElementById('update-animation');
+    
+    form.addEventListener('submit', function(e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            animation.classList.remove('d-none');
+        }
+        
+        form.classList.add('was-validated');
+    });
+});
+</script>

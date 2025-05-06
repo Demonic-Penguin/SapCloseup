@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="100" viewBox="0 0 500 100">
+  <style>
+    .track { fill: none; stroke: #e9ecef; stroke-width: 10; stroke-linecap: round; }
+    .progress { fill: none; stroke: #0d6efd; stroke-width: 10; stroke-linecap: round; }
+    .milestone { fill: #0d6efd; }
+    .milestone-complete { fill: #198754; }
+    .milestone-text { font: bold 12px sans-serif; fill: #495057; text-anchor: middle; }
+  </style>
+  
+  <!-- Progress track -->
+  <path class="track" d="M 50 50 L 450 50" />
+  
+  <!-- Progress bar - adjust the second X coordinate to show progress -->
+  <path class="progress" d="M 50 50 L 200 50" />
+  
+  <!-- Milestones -->
+  <circle class="milestone-complete" cx="50" cy="50" r="15" />
+  <circle class="milestone-complete" cx="150" cy="50" r="15" />
+  <circle class="milestone" cx="250" cy="50" r="15" />
+  <circle class="milestone" cx="350" cy="50" r="15" />
+  <circle class="milestone" cx="450" cy="50" r="15" />
+  
+  <!-- Milestone labels -->
+  <text class="milestone-text" x="50" y="80">Start</text>
+  <text class="milestone-text" x="150" y="80">Verify</text>
+  <text class="milestone-text" x="250" y="80">Process</text>
+  <text class="milestone-text" x="350" y="80">Finalize</text>
+  <text class="milestone-text" x="450" y="80">Complete</text>
+</svg>

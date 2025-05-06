@@ -1,0 +1,126 @@
+<div class="step-container">
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Test Sheet Verification:</strong> Verify that the test sheet matches the unit, is properly signed, and shows no unaddressed failures.
+    </div>
+    
+    <form method="POST" id="testSheetForm" class="needs-validation" novalidate>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Test Sheet Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label class="form-label">Does the test sheet match the unit being processed?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_matches" id="test_matches_yes" value="yes" required>
+                        <label class="form-check-label" for="test_matches_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, it matches
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_matches" id="test_matches_no" value="no">
+                        <label class="form-check-label" for="test_matches_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, it doesn't match
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">Does the test sheet show all pass results or have all failures been addressed?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_passes" id="test_passes_yes" value="yes" required>
+                        <label class="form-check-label" for="test_passes_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, all passes or failures addressed
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_passes" id="test_passes_no" value="no">
+                        <label class="form-check-label" for="test_passes_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, there are unaddressed failures
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">Is the test sheet properly dated and signed?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_signed" id="test_signed_yes" value="yes" required>
+                        <label class="form-check-label" for="test_signed_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, properly dated and signed
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="test_signed" id="test_signed_no" value="no">
+                        <label class="form-check-label" for="test_signed_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, missing date or signature
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">Have all operator comments been reviewed and addressed?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="comments_addressed" id="comments_addressed_yes" value="yes" required>
+                        <label class="form-check-label" for="comments_addressed_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, all comments addressed
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="comments_addressed" id="comments_addressed_no" value="no">
+                        <label class="form-check-label" for="comments_addressed_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, some comments not addressed
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mt-3 d-none" id="test-issues-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> Please address all test sheet issues before proceeding.
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-clipboard-check me-2"></i>
+                Confirm Test Sheet Verification
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testMatchesNo = document.getElementById('test_matches_no');
+    const testPassesNo = document.getElementById('test_passes_no');
+    const testSignedNo = document.getElementById('test_signed_no');
+    const commentsAddressedNo = document.getElementById('comments_addressed_no');
+    const testIssuesAlert = document.getElementById('test-issues-alert');
+    
+    function checkTestIssues() {
+        if (testMatchesNo.checked || testPassesNo.checked || testSignedNo.checked || commentsAddressedNo.checked) {
+            testIssuesAlert.classList.remove('d-none');
+        } else {
+            testIssuesAlert.classList.add('d-none');
+        }
+    }
+    
+    testMatchesNo.addEventListener('change', checkTestIssues);
+    testPassesNo.addEventListener('change', checkTestIssues);
+    testSignedNo.addEventListener('change', checkTestIssues);
+    commentsAddressedNo.addEventListener('change', checkTestIssues);
+});
+</script>

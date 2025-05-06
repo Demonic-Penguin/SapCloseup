@@ -1,0 +1,87 @@
+<div class="step-container">
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Z8 Notifications:</strong> Check and address any Z8 notifications for this service order.
+    </div>
+    
+    <form method="POST" id="notificationsForm" class="needs-validation" novalidate>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Z8 Notifications Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">Have all Z8 notifications been checked and addressed?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="notifications_handled" id="notifications_handled_yes" value="yes" required>
+                        <label class="form-check-label" for="notifications_handled_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, all notifications handled
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="notifications_handled" id="notifications_handled_no" value="no">
+                        <label class="form-check-label" for="notifications_handled_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, some notifications not addressed
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-4 d-none" id="pending-notifications">
+                    <label for="pending_notif" class="form-label">Please list the pending notifications:</label>
+                    <textarea class="form-control" id="pending_notif" rows="3" placeholder="Enter pending notifications here..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mt-3 d-none" id="notifications-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> All Z8 notifications must be addressed before proceeding. Please resolve any pending notifications.
+        </div>
+        
+        <div class="card border-light mt-4">
+            <div class="card-body">
+                <h5 class="card-title text-primary">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    How to Check Z8 Notifications
+                </h5>
+                <ol>
+                    <li>Go to the Service Order in SAP</li>
+                    <li>Navigate to the Notifications tab</li>
+                    <li>Look for any Z8 notifications that require action</li>
+                    <li>Address each notification according to established procedures</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-bell me-2"></i>
+                Confirm Notifications Handled
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationsNo = document.getElementById('notifications_handled_no');
+    const notificationsAlert = document.getElementById('notifications-alert');
+    const pendingNotifications = document.getElementById('pending-notifications');
+    
+    function checkNotifications() {
+        if (notificationsNo.checked) {
+            notificationsAlert.classList.remove('d-none');
+            pendingNotifications.classList.remove('d-none');
+        } else {
+            notificationsAlert.classList.add('d-none');
+            pendingNotifications.classList.add('d-none');
+        }
+    }
+    
+    notificationsNo.addEventListener('change', checkNotifications);
+    document.getElementById('notifications_handled_yes').addEventListener('change', checkNotifications);
+});
+</script>

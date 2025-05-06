@@ -1,0 +1,91 @@
+<div class="step-container">
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Paperwork Verification:</strong> Ensure all paperwork and hardware are complete and accounted for.
+    </div>
+    
+    <form method="POST" id="paperworkForm" class="needs-validation" novalidate>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Paperwork Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-4">
+                    <label class="form-label">Is all the paperwork complete and properly filled out?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paperwork_complete" id="paperwork_complete_yes" value="yes" required>
+                        <label class="form-check-label" for="paperwork_complete_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, all paperwork is complete
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paperwork_complete" id="paperwork_complete_no" value="no">
+                        <label class="form-check-label" for="paperwork_complete_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, some paperwork is missing or incomplete
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Hardware Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-4">
+                    <label class="form-label">Is all hardware accounted for and properly organized?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="hardware_complete" id="hardware_complete_yes" value="yes" required>
+                        <label class="form-check-label" for="hardware_complete_yes">
+                            <i class="fas fa-check-circle text-success me-2"></i> Yes, all hardware is accounted for
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="hardware_complete" id="hardware_complete_no" value="no">
+                        <label class="form-check-label" for="hardware_complete_no">
+                            <i class="fas fa-times-circle text-danger me-2"></i> No, some hardware is missing or disorganized
+                        </label>
+                        <div class="invalid-feedback">
+                            Please select an option.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning mt-3 d-none" id="incomplete-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> Please ensure all paperwork is complete and all hardware is accounted for before proceeding.
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-check me-2"></i>
+                Confirm Paperwork & Hardware
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paperworkNo = document.getElementById('paperwork_complete_no');
+    const hardwareNo = document.getElementById('hardware_complete_no');
+    const incompleteAlert = document.getElementById('incomplete-alert');
+    
+    function checkIncomplete() {
+        if (paperworkNo.checked || hardwareNo.checked) {
+            incompleteAlert.classList.remove('d-none');
+        } else {
+            incompleteAlert.classList.add('d-none');
+        }
+    }
+    
+    paperworkNo.addEventListener('change', checkIncomplete);
+    hardwareNo.addEventListener('change', checkIncomplete);
+});
+</script>
