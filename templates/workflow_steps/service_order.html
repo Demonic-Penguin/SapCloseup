@@ -5,6 +5,7 @@
     </div>
     
     <form method="POST" id="serviceOrderForm" class="needs-validation" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="form-group mb-4">
             <label for="service_order_number" class="form-label">Service Order Number:</label>
             <div class="input-group">
