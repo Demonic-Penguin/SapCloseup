@@ -25,6 +25,10 @@ class ServiceOrder:
         self.sw_versions_out = None
         self.workflow_state = "service_order"  # Starting state
         self.completed_steps = []
+        
+        # For local SAP GUI script generation
+        self.script_name = None
+        self.script_path = None
 
     def mark_step_complete(self, step_name):
         """Mark a workflow step as complete"""

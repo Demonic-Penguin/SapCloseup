@@ -86,7 +86,9 @@ def config():
         global sap
         sap = SapConnection.create()
         
-    return render_template('config.html', current_config=current_config)
+    return render_template('config.html', 
+                           current_config=current_config,
+                           config={'SAP_CONNECTION_TYPE': SAP_CONNECTION_TYPE})
 
 # Main workflow route
 @app.route('/workflow/<step_id>', methods=['GET', 'POST'])
@@ -326,10 +328,12 @@ def workflow(step_id):
         return redirect(url_for('index'))
     
     # GET request - display the current step
+    from config import SAP_CONNECTION_TYPE
     return render_template('workflow.html', 
                           step=current_step, 
                           all_steps=WORKFLOW_STEPS, 
-                          service_order=service_order)
+                          service_order=service_order,
+                          config={'SAP_CONNECTION_TYPE': SAP_CONNECTION_TYPE})
 
 # Reset the workflow and start over
 @app.route('/reset', methods=['POST'])
@@ -347,3 +351,26 @@ def page_not_found(e):
 def server_error(e):
     logger.error(f"Server error: {e}")
     return render_template('500.html'), 500
+
+# Route to download generated SAP scripts
+@app.route('/scripts/<filename>')
+def download_script(filename):
+    from config import SAP_CONNECTION_TYPE, SAP_SCRIPT_DIR
+    
+    # Only allow downloads in local connection mode
+    if SAP_CONNECTION_TYPE != 'local':
+        flash("Script downloads are only available in Local SAP Connection mode", "warning")
+        return redirect(url_for('config'))
+    
+    # Verify the script file exists
+    script_path = os.path.join(SAP_SCRIPT_DIR, filename)
+    if not os.path.exists(script_path):
+        abort(404)
+    
+    try:
+        # Send the file for download
+        return send_file(script_path, as_attachment=True)
+    except Exception as e:
+        logger.error(f"Error downloading script: {e}")
+        flash(f"Error downloading script: {str(e)}", "danger")
+        return redirect(url_for('index'))
