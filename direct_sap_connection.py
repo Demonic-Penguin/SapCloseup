@@ -173,8 +173,26 @@ class DirectSapConnection(DirectSapConnectionBase):
         
         try:
             # Get SAP GUI Scripting object
-            self.sap_gui = win32com.client.GetObject("SAPGUI")
-            application = self.sap_gui.GetScriptingEngine
+            try:
+                # Try using GetObject first
+                self.sap_gui = win32com.client.GetObject("SAPGUI")
+            except Exception as e:
+                logger.warning(f"Failed to connect with GetObject: {str(e)}")
+                # Try using Dispatch as an alternative
+                self.sap_gui = win32com.client.Dispatch("SAPGUI")
+                
+            if not self.sap_gui:
+                error_msg = "Could not connect to SAP GUI. Make sure SAP GUI is installed and running."
+                logger.error(error_msg)
+                return {"error": True, "message": error_msg}
+                
+            # Get the scripting engine
+            try:
+                application = self.sap_gui.GetScriptingEngine
+            except Exception as e:
+                error_msg = "Could not access SAP GUI Scripting engine. Make sure scripting is enabled in SAP."
+                logger.error(f"{error_msg} Error: {str(e)}")
+                return {"error": True, "message": error_msg}
             
             # Check if SAP GUI is running
             if application.Connections.Count > 0:
@@ -185,31 +203,48 @@ class DirectSapConnection(DirectSapConnectionBase):
                 logger.info("Connected to existing SAP GUI session")
             else:
                 # SAP not running or no connections
-                logger.error("No active SAP connections found. Please log in to SAP first.")
-                return False
+                error_msg = "No active SAP connections found. Please log in to SAP first."
+                logger.error(error_msg)
+                return {"error": True, "message": error_msg}
+                
         except Exception as e:
-            logger.error(f"Error connecting to SAP GUI: {str(e)}")
-            return False
+            error_msg = f"Error connecting to SAP GUI: {str(e)}"
+            details = "Verify that: 1) SAP GUI is installed, 2) SAP GUI Scripting is enabled, 3) An active SAP session is open"
+            logger.error(error_msg)
+            return {"error": True, "message": error_msg, "details": details}
             
         return True
     
     def login(self, username=None, password=None):
         """Login to SAP directly"""
         if not self.connected:
-            if not self.connect():
+            connection_result = self.connect()
+            # Check if we got an error response
+            if isinstance(connection_result, dict) and connection_result.get('error'):
+                return connection_result
+            elif not connection_result:
                 return False
         
-        # If we're using an existing connection, we might already be logged in
-        # We'll just set the flag and proceed
-        self.logged_in = True
-        logger.info(f"Using existing SAP GUI session (login is assumed)")
-        
-        return True
+        try:
+            # If we're using an existing connection, we might already be logged in
+            # We'll just set the flag and proceed
+            self.logged_in = True
+            logger.info(f"Using existing SAP GUI session (login is assumed)")
+            return True
+        except Exception as e:
+            error_msg = f"Error during login: {str(e)}"
+            logger.error(error_msg)
+            return {"error": True, "message": error_msg}
     
     def get_service_order_details(self, order_number):
         """Get service order details directly from SAP"""
         if not self.logged_in:
-            raise Exception("Not logged in to SAP")
+            login_result = self.login()
+            if isinstance(login_result, dict) and login_result.get('error'):
+                return login_result
+            if not login_result:
+                error_msg = "Not logged in to SAP"
+                return {"error": True, "message": error_msg}
             
         logger.info(f"Getting service order details for {order_number} directly")
         
@@ -244,12 +279,29 @@ class DirectSapConnection(DirectSapConnectionBase):
                 return result
             
             except Exception as e:
-                logger.error(f"Error parsing service order details: {str(e)}")
-                return None
+                error_msg = f"Error parsing service order details: {str(e)}"
+                logger.error(error_msg)
+                # Check if it's potentially a "not found" error
+                if "FindById" in str(e) and "not found" in str(e).lower():
+                    return {"error": True, "message": f"Service order {order_number} not found", 
+                            "details": "The order number might be incorrect or not accessible."}
+                return {"error": True, "message": error_msg}
         
         except Exception as e:
-            logger.error(f"Error getting service order details: {str(e)}")
-            return None
+            error_msg = f"Error getting service order details: {str(e)}"
+            logger.error(error_msg)
+            
+            # Add detailed troubleshooting info for SAP GUI errors
+            if "StartTransaction" in str(e):
+                details = "SAP GUI scripting may not be enabled. Please check your SAP configuration."
+            elif "COM" in str(e) or "Dispatch" in str(e) or "GetObject" in str(e):
+                details = "There appears to be an issue with the COM interface to SAP GUI. Verify SAP GUI is running properly."
+            elif "syntax" in str(e).lower():
+                details = "Invalid syntax error often indicates issues with SAP GUI scripting permissions or configuration."
+            else:
+                details = "Verify that SAP GUI is running, you are logged in, and that scripting is enabled."
+                
+            return {"error": True, "message": error_msg, "details": details}
     
     def open_ziwbn(self, order_number):
         """Open ZIWBN transaction directly"""
