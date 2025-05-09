@@ -23,12 +23,14 @@
                             <option value="mock" {% if current_config.connection_type == 'mock' %}selected{% endif %}>Mock Data (Development Mode)</option>
                             <option value="api" {% if current_config.connection_type == 'api' %}selected{% endif %}>Real SAP Connection (via API Adapter)</option>
                             <option value="local" {% if current_config.connection_type == 'local' %}selected{% endif %}>Local SAP Connection (Script Generation)</option>
+                            <option value="direct" {% if current_config.connection_type == 'direct' %}selected{% endif %}>Direct SAP Connection (Windows Only)</option>
                         </select>
                         <div class="form-text">
                             <ul class="pt-2">
                                 <li><strong>Mock Data:</strong> Use for testing without SAP</li>
                                 <li><strong>API Adapter:</strong> Use an API server on Windows to control SAP GUI</li>
                                 <li><strong>Local Connection:</strong> Generate VBS scripts to run directly on your Windows machine</li>
+                                <li><strong>Direct Connection:</strong> Directly control SAP GUI without scripts or APIs (Windows only)</li>
                             </ul>
                         </div>
                     </div>
@@ -79,6 +81,11 @@
                                     Local Scripts
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="direct-tab" data-bs-toggle="tab" data-bs-target="#direct-content" type="button" role="tab">
+                                    Direct Connection
+                                </button>
+                            </li>
                         </ul>
                         
                         <div class="tab-content p-3 border border-top-0 rounded-bottom">
@@ -106,6 +113,22 @@
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <strong>Note:</strong> You'll need to have SAP GUI installed with scripting enabled on your Windows machine.
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="direct-content" role="tabpanel">
+                                <h6 class="mb-3">Direct Connection Setup</h6>
+                                <p>The direct connection mode provides seamless automation without requiring script downloads:</p>
+                                <ol>
+                                    <li>This application must be running on a Windows machine with SAP GUI installed</li>
+                                    <li>SAP GUI must have scripting enabled</li>
+                                    <li>SAP GUI should be open with an active connection</li>
+                                    <li>Set the connection mode to "Direct SAP Connection"</li>
+                                    <li>The application will directly control SAP GUI without any script downloads</li>
+                                </ol>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Important:</strong> This mode only works when running this application on Windows with SAP GUI installed. On other platforms, it will fall back to mock data mode.
                                 </div>
                             </div>
                         </div>
