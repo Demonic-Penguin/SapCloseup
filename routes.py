@@ -122,6 +122,15 @@ def workflow(step_id):
         try:
             # Get service order details from SAP
             details = sap.get_service_order_details(order_number)
+            
+            # Check if we got an error response (from DirectSapConnectionUnavailable)
+            if details and isinstance(details, dict) and details.get('error'):
+                flash(f"Error: {details.get('message')}", "danger")
+                if details.get('details'):
+                    flash(details.get('details'), "warning")
+                return render_template('workflow.html', step=current_step, all_steps=WORKFLOW_STEPS)
+            
+            # Handle null or empty response
             if not details:
                 flash("Service order not found in SAP", "danger")
                 return render_template('workflow.html', step=current_step, all_steps=WORKFLOW_STEPS)

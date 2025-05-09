@@ -97,12 +97,23 @@ class DirectSapConnectionUnavailable(DirectSapConnectionBase):
     
     def __init__(self):
         super().__init__()
-        self.reason = "Direct SAP connection is not available on this platform"
+        if not WINDOWS_PLATFORM:
+            self.reason = "Direct SAP connection is only available on Windows platforms"
+        else:
+            self.reason = "Direct SAP connection is not available (pywin32 not installed)"
         logger.warning(self.reason)
     
     def _not_available(self, method_name):
         """Helper to log and return appropriate value when a method is called"""
         logger.warning(f"Cannot execute {method_name}: {self.reason}")
+        # For get_service_order_details specifically, return a structured error message
+        if method_name == "get_service_order_details":
+            return {
+                "error": True,
+                "message": self.reason,
+                "details": "The Direct SAP Connection mode requires a Windows environment with SAP GUI installed. "
+                           "Please switch to another connection mode or run this application on Windows."
+            }
         return None
     
     def connect(self):
