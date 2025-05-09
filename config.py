@@ -105,11 +105,9 @@ SAP_CONFIG = {
 SAP_API_URL = os.environ.get("SAP_API_URL", "http://localhost:5001/api/sap")
 
 # Valid SAP connection types
-# "mock" - Uses mock/sample data, no actual SAP connection
-# "api" - Uses API to communicate with SAP GUI on Windows (requires SAP API server running)
-# "local" - Generates VBS scripts for local execution with SAP GUI
 # "direct" - Uses win32com to directly control SAP GUI (Windows only)
-VALID_CONNECTION_TYPES = ["mock", "api", "local", "direct"]
+# "mock" - Fallback to mock/sample data when direct connection is unavailable
+VALID_CONNECTION_TYPES = ["direct", "mock"]
 
 # Default to "mock" if not previously set
 # This is a module-level variable that will persist across requests

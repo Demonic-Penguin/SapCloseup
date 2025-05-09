@@ -48,47 +48,33 @@ def index():
 def config_page():
     # Access SAP_CONNECTION_TYPE from the config module
     SAP_CONNECTION_TYPE = config_module.SAP_CONNECTION_TYPE
-    SAP_API_URL = config_module.SAP_API_URL
-    import os
     
     # Get current configuration
     current_config = {
-        'connection_type': SAP_CONNECTION_TYPE,
-        'api_url': SAP_API_URL,
-        'api_key': os.environ.get('SAP_API_KEY', '')
+        'connection_type': SAP_CONNECTION_TYPE
     }
     
     # Handle form submission
     if request.method == 'POST':
         connection_type = request.form.get('connection_type')
-        api_url = request.form.get('api_url')
-        api_key = request.form.get('api_key')
-        
-        # Use our update function to persist the connection type
-        from config import update_connection_type
-        update_connection_type(connection_type)
-        
-        if connection_type == 'api':
-            os.environ['SAP_API_URL'] = api_url
-            if api_key:
-                os.environ['SAP_API_KEY'] = api_key
-        
-        # This is a simplified approach for demonstration
-        # In a production environment, we would store these in a config file or database
-        
-        # Show success message
-        flash('Configuration saved successfully. Connection mode is now: ' + connection_type, 'success')
-        
-        # Update current config for display
-        current_config = {
-            'connection_type': connection_type,
-            'api_url': api_url,
-            'api_key': api_key
-        }
-        
-        # Recreate SAP connection with new settings
-        global sap
-        sap = SapConnection.create()
+        if connection_type in ['direct', 'mock']:
+            # Use our update function to persist the connection type
+            from config import update_connection_type
+            update_connection_type(connection_type)
+            
+            # Show success message
+            flash(f'Configuration saved successfully. Connection mode is now: {connection_type}', 'success')
+            
+            # Update current config for display
+            current_config = {
+                'connection_type': connection_type
+            }
+            
+            # Recreate SAP connection with new settings
+            global sap
+            sap = SapConnection.create()
+        else:
+            flash('Invalid connection type. Only Direct SAP Connection or Mock mode are supported.', 'danger')
         
     return render_template('config.html', 
                            current_config=current_config,
