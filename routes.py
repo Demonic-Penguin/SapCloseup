@@ -41,6 +41,52 @@ def index():
         session.pop('service_order')
     return render_template('index.html')
 
+# Route for configuration page
+@app.route('/config', methods=['GET', 'POST'])
+def config():
+    from config import SAP_CONNECTION_TYPE, SAP_API_URL
+    import os
+    
+    # Get current configuration
+    current_config = {
+        'connection_type': SAP_CONNECTION_TYPE,
+        'api_url': SAP_API_URL,
+        'api_key': os.environ.get('SAP_API_KEY', '')
+    }
+    
+    # Handle form submission
+    if request.method == 'POST':
+        connection_type = request.form.get('connection_type')
+        api_url = request.form.get('api_url')
+        api_key = request.form.get('api_key')
+        
+        # Store in environment variables (this is temporary until app restart)
+        os.environ['SAP_CONNECTION_TYPE'] = connection_type
+        
+        if connection_type == 'api':
+            os.environ['SAP_API_URL'] = api_url
+            if api_key:
+                os.environ['SAP_API_KEY'] = api_key
+        
+        # This is a simplified approach for demonstration
+        # In a production environment, we would store these in a config file or database
+        
+        # Show success message
+        flash('Configuration saved successfully. Connection mode is now: ' + connection_type, 'success')
+        
+        # Update current config for display
+        current_config = {
+            'connection_type': connection_type,
+            'api_url': api_url,
+            'api_key': api_key
+        }
+        
+        # Recreate SAP connection with new settings
+        global sap
+        sap = SapConnection.create()
+        
+    return render_template('config.html', current_config=current_config)
+
 # Main workflow route
 @app.route('/workflow/<step_id>', methods=['GET', 'POST'])
 def workflow(step_id):

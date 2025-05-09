@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 rounded-lg mt-4">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h1 class="display-5">
+                    <i class="fas fa-cog me-3 animated-icon"></i>
+                    SAP Connection Settings
+                </h1>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <p class="lead">Configure your SAP connection settings</p>
+                    <p>Use this page to switch between mock data mode and real SAP connection.</p>
+                </div>
+                
+                <form method="POST" id="configForm" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label for="connection_type" class="form-label">Connection Type:</label>
+                        <select class="form-select form-select-lg" id="connection_type" name="connection_type" required>
+                            <option value="mock" {% if current_config.connection_type == 'mock' %}selected{% endif %}>Mock Data (Development Mode)</option>
+                            <option value="api" {% if current_config.connection_type == 'api' %}selected{% endif %}>Real SAP Connection (via API)</option>
+                        </select>
+                        <div class="form-text">
+                            Select mock mode for testing with fake data, or API mode to connect to real SAP system.
+                        </div>
+                    </div>
+                    
+                    <div id="apiSettings" class="{% if current_config.connection_type != 'api' %}d-none{% endif %}">
+                        <div class="mb-4">
+                            <label for="api_url" class="form-label">SAP API URL:</label>
+                            <input type="url" class="form-control form-control-lg" id="api_url" name="api_url" 
+                                   value="{{ current_config.api_url }}" placeholder="http://windows-machine-ip:5001/api/sap">
+                            <div class="form-text">
+                                The URL of the SAP API adapter running on your Windows machine with SAP GUI.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="api_key" class="form-label">SAP API Key:</label>
+                            <input type="password" class="form-control form-control-lg" id="api_key" name="api_key" 
+                                   value="{{ current_config.api_key }}" placeholder="Enter your API key">
+                            <div class="form-text">
+                                The API key for authentication with the SAP API adapter.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>
+                            Save Configuration
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="card border-light mt-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Setup Instructions
+                        </h5>
+                        <p>To connect to a real SAP system, you need to:</p>
+                        <ol>
+                            <li>Set up the SAP API adapter on a Windows machine with SAP GUI</li>
+                            <li>Configure the adapter with the same API key entered here</li>
+                            <li>Ensure SAP GUI is open and logged in on the Windows machine</li>
+                            <li>Make sure the Windows machine is network-accessible from this server</li>
+                        </ol>
+                        <p>See the <a href="https://github.com/your-repo/sap-closeup/blob/main/SAP_INTEGRATION_GUIDE.md" target="_blank">integration guide</a> for detailed setup instructions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const connectionType = document.getElementById('connection_type');
+    const apiSettings = document.getElementById('apiSettings');
+    
+    connectionType.addEventListener('change', function() {
+        if (connectionType.value === 'api') {
+            apiSettings.classList.remove('d-none');
+        } else {
+            apiSettings.classList.add('d-none');
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
