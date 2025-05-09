@@ -337,7 +337,7 @@ def workflow(step_id):
                           step=current_step, 
                           all_steps=WORKFLOW_STEPS, 
                           service_order=service_order,
-                          config={'SAP_CONNECTION_TYPE': config.SAP_CONNECTION_TYPE})
+                          config={'SAP_CONNECTION_TYPE': config_module.SAP_CONNECTION_TYPE})
 
 # Reset the workflow and start over
 @app.route('/reset', methods=['POST'])

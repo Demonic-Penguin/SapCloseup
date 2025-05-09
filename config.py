@@ -110,6 +110,9 @@ if "SAP_CONNECTION_TYPE" not in globals():
     # Initialize from environment variable or default to "mock"
     globals()["SAP_CONNECTION_TYPE"] = os.environ.get("SAP_CONNECTION_TYPE", "mock")  # "mock", "api", or "local"
 
+# Define as a regular module variable for easier access
+SAP_CONNECTION_TYPE = globals()["SAP_CONNECTION_TYPE"]
+
 # Local SAP GUI script directory path
 # This is where VBS scripts will be generated when using "local" connection type
 SAP_SCRIPT_DIR = os.environ.get("SAP_SCRIPT_DIR", "sap_scripts")
@@ -118,5 +121,8 @@ SAP_SCRIPT_DIR = os.environ.get("SAP_SCRIPT_DIR", "sap_scripts")
 def update_connection_type(conn_type):
     """Update the connection type and persist it"""
     globals()["SAP_CONNECTION_TYPE"] = conn_type
+    # Update the module-level variable as well
+    global SAP_CONNECTION_TYPE
+    SAP_CONNECTION_TYPE = conn_type
     # Also update environment variable (though this won't persist across app restarts)
     os.environ["SAP_CONNECTION_TYPE"] = conn_type
