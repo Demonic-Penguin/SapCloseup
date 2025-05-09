@@ -104,11 +104,21 @@ SAP_CONFIG = {
 # SAP Connection Configuration
 SAP_API_URL = os.environ.get("SAP_API_URL", "http://localhost:5001/api/sap")
 
+# Valid SAP connection types
+# "mock" - Uses mock/sample data, no actual SAP connection
+# "api" - Uses API to communicate with SAP GUI on Windows (requires SAP API server running)
+# "local" - Generates VBS scripts for local execution with SAP GUI
+# "direct" - Uses win32com to directly control SAP GUI (Windows only)
+VALID_CONNECTION_TYPES = ["mock", "api", "local", "direct"]
+
 # Default to "mock" if not previously set
 # This is a module-level variable that will persist across requests
 if "SAP_CONNECTION_TYPE" not in globals():
     # Initialize from environment variable or default to "mock"
-    globals()["SAP_CONNECTION_TYPE"] = os.environ.get("SAP_CONNECTION_TYPE", "mock")  # "mock", "api", or "local"
+    conn_type = os.environ.get("SAP_CONNECTION_TYPE", "mock")
+    if conn_type not in VALID_CONNECTION_TYPES:
+        conn_type = "mock"  # Fallback to mock if invalid value
+    globals()["SAP_CONNECTION_TYPE"] = conn_type
 
 # Define as a regular module variable for easier access
 SAP_CONNECTION_TYPE = globals()["SAP_CONNECTION_TYPE"]
@@ -120,6 +130,10 @@ SAP_SCRIPT_DIR = os.environ.get("SAP_SCRIPT_DIR", "sap_scripts")
 # Function to update connection type
 def update_connection_type(conn_type):
     """Update the connection type and persist it"""
+    # Validate the connection type
+    if conn_type not in VALID_CONNECTION_TYPES:
+        raise ValueError(f"Invalid connection type: {conn_type}. Valid types are: {', '.join(VALID_CONNECTION_TYPES)}")
+        
     globals()["SAP_CONNECTION_TYPE"] = conn_type
     # Update the module-level variable as well
     global SAP_CONNECTION_TYPE

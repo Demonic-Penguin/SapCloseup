@@ -844,6 +844,10 @@ def get_sap_connection():
         return ApiSapConnection()
     elif connection_type == "local":
         return LocalSapConnection()
+    elif connection_type == "direct":
+        # For the direct connection, we need to import it here to avoid circular imports
+        from direct_sap_connection import create_direct_sap_connection
+        return create_direct_sap_connection()
     else:
         return MockSapConnection()
 
