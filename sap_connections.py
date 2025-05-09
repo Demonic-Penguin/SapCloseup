@@ -649,7 +649,7 @@ class ApiSapConnection:
     def __init__(self):
         self.connected = False
         self.logged_in = False
-        self.api_url = config.SAP_API_URL
+        self.api_url = config_module.SAP_API_URL
         self.api_key = os.environ.get("SAP_API_KEY", "")
         logger.info("API SAP Connection initialized")
     
