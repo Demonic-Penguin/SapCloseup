@@ -21,10 +21,15 @@
                         <label for="connection_type" class="form-label">Connection Type:</label>
                         <select class="form-select form-select-lg" id="connection_type" name="connection_type" required>
                             <option value="mock" {% if current_config.connection_type == 'mock' %}selected{% endif %}>Mock Data (Development Mode)</option>
-                            <option value="api" {% if current_config.connection_type == 'api' %}selected{% endif %}>Real SAP Connection (via API)</option>
+                            <option value="api" {% if current_config.connection_type == 'api' %}selected{% endif %}>Real SAP Connection (via API Adapter)</option>
+                            <option value="local" {% if current_config.connection_type == 'local' %}selected{% endif %}>Local SAP Connection (Script Generation)</option>
                         </select>
                         <div class="form-text">
-                            Select mock mode for testing with fake data, or API mode to connect to real SAP system.
+                            <ul class="pt-2">
+                                <li><strong>Mock Data:</strong> Use for testing without SAP</li>
+                                <li><strong>API Adapter:</strong> Use an API server on Windows to control SAP GUI</li>
+                                <li><strong>Local Connection:</strong> Generate VBS scripts to run directly on your Windows machine</li>
+                            </ul>
                         </div>
                     </div>
                     

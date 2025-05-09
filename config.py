@@ -101,6 +101,10 @@ SAP_CONFIG = {
     "passwd": os.environ.get("SAP_PASSWORD", "")
 }
 
-# SAP API Configuration for Windows SAP GUI integration
+# SAP Connection Configuration
 SAP_API_URL = os.environ.get("SAP_API_URL", "http://localhost:5001/api/sap")
-SAP_CONNECTION_TYPE = os.environ.get("SAP_CONNECTION_TYPE", "mock")  # "mock" or "api"
+SAP_CONNECTION_TYPE = os.environ.get("SAP_CONNECTION_TYPE", "mock")  # "mock", "api", or "local"
+
+# Local SAP GUI script directory path
+# This is where VBS scripts will be generated when using "local" connection type
+SAP_SCRIPT_DIR = os.environ.get("SAP_SCRIPT_DIR", "sap_scripts")

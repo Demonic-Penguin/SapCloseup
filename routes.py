@@ -1,9 +1,10 @@
 import logging
-from flask import render_template, request, redirect, url_for, session, flash, jsonify
+from flask import render_template, request, redirect, url_for, session, flash, jsonify, send_file, abort
 from app import app
 from models import ServiceOrder
 from sap_connections import SapConnection
-from config import WORKFLOW_STEPS, SPEX_CUSTOMER_NUMBERS
+from config import WORKFLOW_STEPS, SPEX_CUSTOMER_NUMBERS, SAP_SCRIPT_DIR
+import os
 
 logger = logging.getLogger(__name__)
 # Create a SAP connection instance using the factory method
