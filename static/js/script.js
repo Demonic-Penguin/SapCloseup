@@ -9,14 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
     
-    // Alert auto-dismiss
-    const alerts = document.querySelectorAll('.alert:not(.alert-warning):not(.alert-danger)');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }, 5000);
-    });
+    // Alert auto-dismiss functionality removed as requested
     
     // Animate elements when they come into view
     const animateOnScroll = function() {
