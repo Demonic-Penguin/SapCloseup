@@ -9,7 +9,8 @@ import random
 import os
 import requests
 import json
-from config import SPEX_CUSTOMER_NUMBERS, SAP_API_URL, SAP_CONNECTION_TYPE, SAP_SCRIPT_DIR
+from config import SPEX_CUSTOMER_NUMBERS, SAP_SCRIPT_DIR
+import config as config_module
 
 logger = logging.getLogger(__name__)
 
@@ -648,7 +649,7 @@ class ApiSapConnection:
     def __init__(self):
         self.connected = False
         self.logged_in = False
-        self.api_url = SAP_API_URL
+        self.api_url = config.SAP_API_URL
         self.api_key = os.environ.get("SAP_API_KEY", "")
         logger.info("API SAP Connection initialized")
     
@@ -836,9 +837,12 @@ class ApiSapConnection:
 # Factory function to create the appropriate connection based on config
 def get_sap_connection():
     """Create appropriate SAP connection based on configuration"""
-    if SAP_CONNECTION_TYPE == "api":
+    # Access the SAP_CONNECTION_TYPE from config module
+    connection_type = config_module.SAP_CONNECTION_TYPE
+    
+    if connection_type == "api":
         return ApiSapConnection()
-    elif SAP_CONNECTION_TYPE == "local":
+    elif connection_type == "local":
         return LocalSapConnection()
     else:
         return MockSapConnection()

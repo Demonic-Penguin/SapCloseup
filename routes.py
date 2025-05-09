@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, session, flash, j
 from app import app
 from models import ServiceOrder
 from sap_connections import SapConnection
-import config
+import config as config_module
 from config import WORKFLOW_STEPS, SPEX_CUSTOMER_NUMBERS, SAP_SCRIPT_DIR
 import os
 
@@ -45,10 +45,10 @@ def index():
 
 # Route for configuration page
 @app.route('/config', methods=['GET', 'POST'])
-def config():
+def config_page():
     # Access SAP_CONNECTION_TYPE from the config module
-    SAP_CONNECTION_TYPE = config.SAP_CONNECTION_TYPE
-    SAP_API_URL = config.SAP_API_URL
+    SAP_CONNECTION_TYPE = config_module.SAP_CONNECTION_TYPE
+    SAP_API_URL = config_module.SAP_API_URL
     import os
     
     # Get current configuration
@@ -362,12 +362,12 @@ def download_script(filename):
     # Access SAP_CONNECTION_TYPE and SAP_SCRIPT_DIR from config module
     
     # Only allow downloads in local connection mode
-    if config.SAP_CONNECTION_TYPE != 'local':
+    if config_module.SAP_CONNECTION_TYPE != 'local':
         flash("Script downloads are only available in Local SAP Connection mode", "warning")
-        return redirect(url_for('config'))
+        return redirect(url_for('config_page'))
     
     # Verify the script file exists
-    script_path = os.path.join(config.SAP_SCRIPT_DIR, filename)
+    script_path = os.path.join(config_module.SAP_SCRIPT_DIR, filename)
     if not os.path.exists(script_path):
         abort(404)
     
