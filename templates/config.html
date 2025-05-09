@@ -121,14 +121,38 @@
                                 <p>The direct connection mode provides seamless automation without requiring script downloads:</p>
                                 <ol>
                                     <li>This application must be running on a Windows machine with SAP GUI installed</li>
-                                    <li>SAP GUI must have scripting enabled</li>
-                                    <li>SAP GUI should be open with an active connection</li>
+                                    <li>SAP GUI must have scripting enabled (see instructions below)</li>
+                                    <li>SAP GUI should be open with an active connection before using this application</li>
                                     <li>Set the connection mode to "Direct SAP Connection"</li>
                                     <li>The application will directly control SAP GUI without any script downloads</li>
                                 </ol>
-                                <div class="alert alert-warning">
+                                
+                                <div class="alert alert-warning mb-3">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
                                     <strong>Important:</strong> This mode only works when running this application on Windows with SAP GUI installed. On other platforms, it will fall back to mock data mode.
+                                </div>
+                                
+                                <div class="card bg-light mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">How to Enable SAP GUI Scripting</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Follow these steps to enable SAP GUI Scripting:</p>
+                                        <ol>
+                                            <li>Open SAP GUI</li>
+                                            <li>Go to "Customize Local Layout" (Alt+F12)</li>
+                                            <li>Select the "Scripting" tab</li>
+                                            <li>Check "Enable Scripting"</li>
+                                            <li>Uncheck "Notify when a script attaches to a running SAP GUI"</li>
+                                            <li>Click "OK" to save the settings</li>
+                                            <li>Restart SAP GUI</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Troubleshooting:</strong> If you encounter COM interface or "Invalid class string" errors, try restarting SAP GUI, ensuring you have an active session open, or checking with your SAP administrator about scripting permissions. Some corporate SAP installations restrict scripting capabilities.
                                 </div>
                             </div>
                         </div>

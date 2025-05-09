@@ -178,21 +178,76 @@ class DirectSapConnection(DirectSapConnectionBase):
                 self.sap_gui = win32com.client.GetObject("SAPGUI")
             except Exception as e:
                 logger.warning(f"Failed to connect with GetObject: {str(e)}")
-                # Try using Dispatch as an alternative
-                self.sap_gui = win32com.client.Dispatch("SAPGUI")
+                try:
+                    # Try using Dispatch with correct ProgID
+                    self.sap_gui = win32com.client.Dispatch("SAP.SAPGUI")
+                except Exception as e2:
+                    logger.warning(f"Failed to connect with Dispatch('SAP.SAPGUI'): {str(e2)}")
+                    try:
+                        # Try additional alternative ProgIDs
+                        self.sap_gui = win32com.client.Dispatch("SAPGUI.ScriptingCtrl.1")
+                    except Exception as e3:
+                        logger.warning(f"Failed to connect with Dispatch('SAPGUI.ScriptingCtrl.1'): {str(e3)}")
+                        # Final fallback
+                        try:
+                            self.sap_gui = win32com.client.Dispatch("SapROTWr.SapROTWrapper")
+                        except Exception as e4:
+                            logger.warning(f"Failed to connect with SapROTWrapper: {str(e4)}")
                 
+            # If we failed to get SAP GUI through normal means, try ROT (Running Object Table)
+            if not self.sap_gui:
+                try:
+                    logger.info("Attempting to connect via ROT...")
+                    # Try to use the ROT as a last resort
+                    import pythoncom
+                    from win32com.client import GetObject
+                    
+                    # Get the ROT
+                    rot = pythoncom.GetRunningObjectTable()
+                    rot_items = rot.EnumRunning()
+                    
+                    sap_found = False
+                    for i in range(rot_items.GetCount()):
+                        item = rot_items.Next()
+                        name = rot.GetDisplayName(item, None)
+                        logger.info(f"ROT item: {name}")
+                        
+                        # Look for SAP in the ROT
+                        if "SAP" in name:
+                            try:
+                                # Attempt to get the SAP application from the ROT
+                                self.sap_gui = GetObject(name)
+                                sap_found = True
+                                logger.info(f"Connected to SAP via ROT: {name}")
+                                break
+                            except Exception as e_rot:
+                                logger.warning(f"Failed to connect to SAP via ROT item {name}: {str(e_rot)}")
+                    
+                    if not sap_found:
+                        logger.warning("No SAP items found in the ROT")
+                        
+                except Exception as e_rot_overall:
+                    logger.warning(f"Error accessing ROT: {str(e_rot_overall)}")
+            
+            # Final check if we have a valid SAP GUI reference
             if not self.sap_gui:
                 error_msg = "Could not connect to SAP GUI. Make sure SAP GUI is installed and running."
                 logger.error(error_msg)
-                return {"error": True, "message": error_msg}
+                details = "Try one of the following:\n1. Ensure SAP GUI is running\n2. Restart SAP GUI\n3. Try a different connection mode"
+                return {"error": True, "message": error_msg, "details": details}
                 
             # Get the scripting engine
             try:
                 application = self.sap_gui.GetScriptingEngine
             except Exception as e:
-                error_msg = "Could not access SAP GUI Scripting engine. Make sure scripting is enabled in SAP."
-                logger.error(f"{error_msg} Error: {str(e)}")
-                return {"error": True, "message": error_msg}
+                # Try alternative property names for different SAP versions
+                try:
+                    # Some versions use ScriptingEngine instead of GetScriptingEngine
+                    application = self.sap_gui.ScriptingEngine
+                except Exception as e2:
+                    error_msg = "Could not access SAP GUI Scripting engine. Make sure scripting is enabled in SAP."
+                    logger.error(f"{error_msg} Error: {str(e)}, Alternate error: {str(e2)}")
+                    return {"error": True, "message": error_msg, "details": "Ensure SAP scripting is enabled in SAP GUI options"}
             
             # Check if SAP GUI is running
             if application.Connections.Count > 0:
