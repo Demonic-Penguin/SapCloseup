@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, session, flash, j
 from app import app
 from models import ServiceOrder
 from sap_connections import SapConnection
+import config
 from config import WORKFLOW_STEPS, SPEX_CUSTOMER_NUMBERS, SAP_SCRIPT_DIR
 import os
 
@@ -45,7 +46,9 @@ def index():
 # Route for configuration page
 @app.route('/config', methods=['GET', 'POST'])
 def config():
-    from config import SAP_CONNECTION_TYPE, SAP_API_URL
+    # Access SAP_CONNECTION_TYPE from the config module
+    SAP_CONNECTION_TYPE = config.SAP_CONNECTION_TYPE
+    SAP_API_URL = config.SAP_API_URL
     import os
     
     # Get current configuration
@@ -61,8 +64,9 @@ def config():
         api_url = request.form.get('api_url')
         api_key = request.form.get('api_key')
         
-        # Store in environment variables (this is temporary until app restart)
-        os.environ['SAP_CONNECTION_TYPE'] = connection_type
+        # Use our update function to persist the connection type
+        from config import update_connection_type
+        update_connection_type(connection_type)
         
         if connection_type == 'api':
             os.environ['SAP_API_URL'] = api_url
@@ -328,12 +332,12 @@ def workflow(step_id):
         return redirect(url_for('index'))
     
     # GET request - display the current step
-    from config import SAP_CONNECTION_TYPE
+    # Access SAP_CONNECTION_TYPE from the config module
     return render_template('workflow.html', 
                           step=current_step, 
                           all_steps=WORKFLOW_STEPS, 
                           service_order=service_order,
-                          config={'SAP_CONNECTION_TYPE': SAP_CONNECTION_TYPE})
+                          config={'SAP_CONNECTION_TYPE': config.SAP_CONNECTION_TYPE})
 
 # Reset the workflow and start over
 @app.route('/reset', methods=['POST'])
@@ -355,15 +359,15 @@ def server_error(e):
 # Route to download generated SAP scripts
 @app.route('/scripts/<filename>')
 def download_script(filename):
-    from config import SAP_CONNECTION_TYPE, SAP_SCRIPT_DIR
+    # Access SAP_CONNECTION_TYPE and SAP_SCRIPT_DIR from config module
     
     # Only allow downloads in local connection mode
-    if SAP_CONNECTION_TYPE != 'local':
+    if config.SAP_CONNECTION_TYPE != 'local':
         flash("Script downloads are only available in Local SAP Connection mode", "warning")
         return redirect(url_for('config'))
     
     # Verify the script file exists
-    script_path = os.path.join(SAP_SCRIPT_DIR, filename)
+    script_path = os.path.join(config.SAP_SCRIPT_DIR, filename)
     if not os.path.exists(script_path):
         abort(404)
     
